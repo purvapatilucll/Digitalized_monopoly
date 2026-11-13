@@ -1,0 +1,37 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon",
+    "dev": "npx nodemon",
+    "okd": "cd repository && npx prisma generate && npx prisma migrate deploy && cd .. && npx ts-node util/seed.ts && nodemon -L app.ts --delay 3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/date-fns": "^2.6.3",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.1",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "back-end": "file:",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "prisma": "^6.7.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.2"
+  }
+}

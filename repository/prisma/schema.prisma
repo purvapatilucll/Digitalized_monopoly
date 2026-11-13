@@ -1,0 +1,89 @@
+// if okd doesn't work, run "npx prisma migrate deploy" in the backend terminal in okd
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id                    Int             @id @default(autoincrement())
+  cardName              String          @unique
+  piece                 String          @unique
+  balance               Int
+  balanceHistory        Int[]
+  role                  String
+  transactionsSent      Transaction[]   @relation("SenderRelation")
+  transactionsReceived  Transaction[]   @relation("ReceiverRelation")
+  scans                 Scan[]
+  gameId                Int?
+  cards                 Card[]
+  stolen                Steal[]         @relation("StealerRelation")
+  robbed                Steal[]         @relation("VictimRelation")
+  Ddossed               Int             @default(0)
+  Protected             Int             @default(0)
+}
+
+
+model Card {
+  id          Int     @id @default(autoincrement())
+  message     String
+  outcome     Int
+  type        String
+  played      Boolean @default(false)
+  store       Boolean @default(false)
+  user        User?    @relation(fields: [userCardName], references: [cardName])
+  userCardName String?
+}
+
+model Transaction {
+  id            Int     @id @default(autoincrement())
+  timeStamp     DateTime @default(now())
+  senderPiece   String
+  receiverPiece String
+  sender        User     @relation("SenderRelation", fields: [senderPiece], references: [piece])
+  receiver      User     @relation("ReceiverRelation", fields: [receiverPiece], references: [piece])
+  amount        Int
+  roulette      Boolean @default(false)
+}
+
+
+model Scan {
+  id           Int      @id @default(autoincrement())
+  userCardName String
+  user         User     @relation(fields: [userCardName], references: [cardName])
+  typeOfScan   String
+  timeStamp    DateTime @default(now())
+  gameId       Int?
+}
+
+model Game {
+  id         Int      @id @default(autoincrement())
+  isOver     Boolean  @default(false)
+  startedAt  DateTime @default(now())
+  endedAt    DateTime?
+
+  winStrat String
+}
+
+model Steal {
+  id              Int      @id @default(autoincrement())
+  stealerPiece    String
+  stealersIp      String?
+  victimPiece     String
+  Stealer         User     @relation("StealerRelation", fields: [stealerPiece], references: [piece])
+  Victim          User     @relation("VictimRelation", fields: [victimPiece], references: [piece])
+  amount          Int
+  timeStamp       DateTime @default(now())
+}
+
+model StealToken {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+}
+
